@@ -1,0 +1,25 @@
+{
+  "presets": [
+    ["@babel/preset-env", {
+      "modules": false, // 模块使用 es modules ，不使用 commonJS 规范
+      "useBuiltIns": "usage", // usage-按需引入 entry-入口引入（整体引入） false-不引入polyfill
+      "corejs": 2,
+      "targets": {
+        "browsers": [
+          "last 2 version",
+          "> 0.5%",
+          "IE 10",
+          "not dead"
+        ],
+      }
+    }]
+  ],
+  "plugins": [
+    ["@babel/plugin-transform-runtime", {
+      "corejs": 2,
+      "helpers": true,
+      "regenerator": false,
+      "useESModules": true // 使用 es modules helpers, 减少 commonJS 语法代码
+    }]
+  ]  
+}
