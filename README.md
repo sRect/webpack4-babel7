@@ -5,6 +5,15 @@
 3. [Show me the code，babel 7 最佳实践！](https://juejin.im/post/5c03a4d0f265da615e053612#heading-5)
 4. [Configure Babel](https://babeljs.io/docs/en/configuration)
 
+使用
+```bash
+git clone
+npm install
+npm run start
+// 或者直接通过babel编译 
+npm run babel_build
+```
+
 .babelrc配置
 ```json
 {
