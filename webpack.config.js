@@ -7,6 +7,7 @@ const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin'); // 分�
 const PurifycssPlugin = require('purifycss-webpack'); // 消除无用的css
 const UglifyjsWebpackPlugin = require('uglifyjs-webpack-plugin'); // 混淆压缩js
 // const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   // devtool: 'inline-source-map',
@@ -20,6 +21,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].[hash:20].js' // 多出口
   },
+  mode: process.env.NODE_ENV,
   resolve: {
     // 能够使用户在引入模块时不带扩展
     extensions: ['.js', '.json', '.vue', 'css', 'less'],
@@ -102,6 +104,49 @@ module.exports = {
         }
       }
     },
+    minimizer: [
+      new TerserPlugin({
+        test: /\.js(\?.*)?$/i,
+        exclude: /\/node_modules/,
+        cache: true,
+        parallel: true,
+        sourceMap: true,
+        terserOptions: {
+          ecma: undefined,
+          warnings: false,
+          parse: {},
+          compress: {
+            drop_console: true,
+            drop_debugger: true
+          },
+          mangle: true, // Note `mangle.properties` is `false` by default.
+          module: false,
+          output: null,
+          toplevel: false,
+          nameCache: null,
+          ie8: false,
+          keep_classnames: undefined,
+          keep_fnames: false,
+          safari10: false,
+        },
+      }),
+      // new UglifyjsWebpackPlugin({
+      //   uglifyOptions: {
+      //     warnings: false,
+      //     parse: {},
+      //     compress: {
+      //       drop_console: true,
+      //       drop_debugger: true
+      //     },
+      //     mangle: true, // Note `mangle.properties` is `false` by default.
+      //     output: null,
+      //     toplevel: false,
+      //     nameCache: null,
+      //     ie8: false,
+      //     keep_fnames: false,
+      //   },
+      // }),
+    ]
   },
   plugins: [
     new CleanWebpackPlugin(),
@@ -136,22 +181,22 @@ module.exports = {
     //   paths: glob.sync(path.join(__dirname, 'src/*.html'))
     // }),
     new webpack.HotModuleReplacementPlugin(),
-    new UglifyjsWebpackPlugin({
-      exclude: /\/node_modules/,
-      parallel: true,
-      sourceMap: true,
-      uglifyOptions: {
-        warnings: false,
-        parse: {},
-        compress: {},
-        mangle: true, // Note `mangle.properties` is `false` by default.
-        output: null,
-        toplevel: false,
-        nameCache: null,
-        ie8: false,
-        keep_fnames: false,
-      },
-    })
+    // new UglifyjsWebpackPlugin({
+    //   exclude: /\/node_modules/,
+    //   parallel: true,
+    //   sourceMap: true,
+    //   uglifyOptions: {
+    //     warnings: false,
+    //     parse: {},
+    //     compress: {},
+    //     mangle: true, // Note `mangle.properties` is `false` by default.
+    //     output: null,
+    //     toplevel: false,
+    //     nameCache: null,
+    //     ie8: false,
+    //     keep_fnames: false,
+    //   },
+    // })
   ],
   devServer: {
     contentBase: path.resolve(__dirname, 'dist'),
@@ -160,6 +205,5 @@ module.exports = {
     hot: true,
     open: true,
     host: 'localhost'
-  },
-  mode: "development"
+  }
 }
