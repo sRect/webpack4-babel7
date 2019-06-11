@@ -44,6 +44,7 @@
     "@babel/polyfill": "^7.4.4",
     "@babel/runtime": "^7.4.5",
     "@babel/runtime-corejs2": "^7.4.5",
-    "core-js": "^2.6.9"
+    "core-js": "^2.6.9",
+    "jquery": "^3.4.1"
   }
 }

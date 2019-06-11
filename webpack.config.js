@@ -7,7 +7,7 @@ const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin'); // 分�
 const PurifycssPlugin = require('purifycss-webpack'); // 消除无用的css
 const UglifyjsWebpackPlugin = require('uglifyjs-webpack-plugin'); // 混淆压缩js
 // const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin'); // 混淆压缩js
 
 module.exports = {
   // devtool: 'inline-source-map',
@@ -197,6 +197,16 @@ module.exports = {
     //     keep_fnames: false,
     //   },
     // })
+    // 暴露全局变量,引入第三方类库
+    new webpack.ProvidePlugin({
+      $: 'jquery', // npm
+      jQuery: 'jQuery' // 本地Js文件
+    }),
+    // 指定环境, 定义环境变量
+    new webpack.DefinePlugin({
+      'process.env': env,
+      'BASE_URL': '"http://api.xxx.com:8080"'
+    })
   ],
   devServer: {
     contentBase: path.resolve(__dirname, 'dist'),
@@ -204,6 +214,11 @@ module.exports = {
     compress: true,
     hot: true,
     open: true,
-    host: 'localhost'
+    host: 'localhost',
+    historyApiFallback: true, // 该选项的作用所有的404都连接到index.html
+    proxy: {
+      // 代理到后端的服务地址，会拦截所有以api开头的请求地址
+      "/api": "http://localhost:3000"
+    }
   }
 }
