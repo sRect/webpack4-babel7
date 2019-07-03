@@ -30,3 +30,26 @@ class IteratorTest {
 
 const iteratorTest = new IteratorTest([1,2,3]);
 iteratorTest.foo();
+
+// AOP
+function after(target, key, desc) {
+  const {
+    value
+  } = desc;
+  desc.value = function (...args) {
+    let res = value.apply(this, args);
+    console.log('加滤镜')
+    return res;
+  }
+  return desc;
+}
+
+class Test {
+  @after
+  takePhoto() {
+    console.log('拍照')
+  }
+}
+
+let t = new Test()
+t.takePhoto()

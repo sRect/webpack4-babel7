@@ -204,7 +204,7 @@ module.exports = {
     }),
     // 指定环境, 定义环境变量
     new webpack.DefinePlugin({
-      'process.env': env,
+      'process.env': process.env.NODE_ENV,
       'BASE_URL': '"http://api.xxx.com:8080"'
     })
   ],
