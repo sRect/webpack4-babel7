@@ -8,6 +8,8 @@ const PurifycssPlugin = require('purifycss-webpack'); // 消除无用的css
 const UglifyjsWebpackPlugin = require('uglifyjs-webpack-plugin'); // 混淆压缩js
 // const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
 const TerserPlugin = require('terser-webpack-plugin'); // 混淆压缩js
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+const WebpackBuildNotifierPlugin = require('webpack-build-notifier');
 
 module.exports = {
   // devtool: 'inline-source-map',
@@ -197,6 +199,12 @@ module.exports = {
     //     keep_fnames: false,
     //   },
     // })
+    new FriendlyErrorsWebpackPlugin(),
+    new WebpackBuildNotifierPlugin({
+      title: "编译结果：",
+      // logo: path.resolve("./img/favicon.png"),
+      suppressSuccess: true
+    }),
     // 暴露全局变量,引入第三方类库
     new webpack.ProvidePlugin({
       $: 'jquery', // npm

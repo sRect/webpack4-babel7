@@ -33,9 +33,8 @@ iteratorTest.foo();
 
 // AOP
 function after(target, key, desc) {
-  const {
-    value
-  } = desc;
+  console.log(target, key, desc)
+  const { value } = desc;
   desc.value = function (...args) {
     let res = value.apply(this, args);
     console.log('加滤镜')
