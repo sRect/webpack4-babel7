@@ -1,3 +1,4 @@
+import MyMarkup from '@/js/MyMarkup';
 class Button {
   constructor(viewer) {
     this.viewer = viewer;
@@ -10,8 +11,9 @@ class Button {
     this.markup3DBtn.setIcon("fa");
     this.markup3DBtn.setIcon("fa-star");
     this.markup3DBtn.setToolTip('3D标注');
-    this.markup3DBtn.onClick = function () {
-      console.log("3D标注")
+    this.markup3DBtn.onClick = () =>　{
+      const myMarkup = new MyMarkup(this.viewer);
+      myMarkup.init();
     }
   }
 

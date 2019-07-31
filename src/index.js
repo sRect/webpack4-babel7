@@ -3,16 +3,15 @@ require('@/css/btn.less');
 // require("style-loader!css-loader!postcss-loader!less-loader!../node_modules/font-awesome/css/font-awesome.css");
 import 'style-loader!css-loader!postcss-loader!less-loader!node_modules/font-awesome/css/font-awesome.css';
 import modelShow from '@/js/modelShow';
-import MyMarkup from '@/js/MyMarkup';
+
 import Button from '@/js/createAndAddBtn';
 
 window.onload = function() {
   modelShow(function(viewer) {
     console.log(viewer)
     if(viewer) {
-      const myMarkup = new MyMarkup(viewer);
       const button = new Button(viewer);
-      myMarkup.init();
+      
       button.init();
     } else {
       throw new Error("模型初始化失败...")
