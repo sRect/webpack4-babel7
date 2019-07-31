@@ -1,4 +1,5 @@
 require('@/css/index.css');
+require('@/css/btn.less');
 // require("style-loader!css-loader!postcss-loader!less-loader!../node_modules/font-awesome/css/font-awesome.css");
 import 'style-loader!css-loader!postcss-loader!less-loader!node_modules/font-awesome/css/font-awesome.css';
 import modelShow from '@/js/modelShow';
