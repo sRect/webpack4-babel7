@@ -10,9 +10,10 @@ const UglifyjsWebpackPlugin = require('uglifyjs-webpack-plugin'); // 混淆压�
 const TerserPlugin = require('terser-webpack-plugin'); // 混淆压缩js
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const WebpackBuildNotifierPlugin = require('webpack-build-notifier');
+const copyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-  // devtool: 'inline-source-map',
+  devtool: 'inline-source-map',
   // entry: './src/index.js',
   entry: ['./src/index.js'], // 将两个文件打包成一个
   // entry: { // 多入口
@@ -28,7 +29,8 @@ module.exports = {
     // 能够使用户在引入模块时不带扩展
     extensions: ['.js', '.json', '.vue', 'css', 'less'],
     alias: {
-      '@': path.resolve(__dirname, './src')
+      '@': path.resolve(__dirname, './src'),
+      'node_modules': path.resolve(__dirname, './node_modules')
     }
   },
   module: {
@@ -37,7 +39,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
         },
-        exclude: /node_modules/
+        exclude: /node_modules|static/
       },
       {
         test: /\.css$/,
@@ -54,7 +56,8 @@ module.exports = {
               loader: 'postcss-loader'
             }
           ]
-        })
+        }),
+        exclude: /node_modules|static/
       },
       {
         test: /\.less$/,
@@ -70,19 +73,22 @@ module.exports = {
               loader: 'less-loader'
             }
           ]
-        })
+        }),
+        exclude: /node_modules|static/
       },
       {
-        test: /\.(png|jpg|gif|ttf|eot|woff(2)?)(\?[=a-z0-9]+)?$/,
+        test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g|gif)(\?\S*)?$/,
+        // test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g|gif)(\?.*$|$)/,
         use: [{
           loader: 'url-loader',
           options: {
-            limit: 8192,
-            outputPath: 'images/',
-            name: '[name]_[hash:7].[ext]'
+            limit: 100000,
+            name: '[name].[ext]'
           }
         }]
       },
+      // { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&mimetype=application/font-woff" },
+      // { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" }
     ]
   },
   optimization: {
@@ -199,6 +205,10 @@ module.exports = {
     //     keep_fnames: false,
     //   },
     // })
+    new copyWebpackPlugin([{
+      from: path.resolve(__dirname, './static'), //要打包的静态资源目录地址，这里的__dirname是指项目目录下，是node的一种语法，可以直接定位到本机的项目目录中
+      to: './static', //要打包到的文件夹路径，跟随output配置中的目录。所以不需要再自己加__dirname
+    }]),
     new FriendlyErrorsWebpackPlugin(),
     new WebpackBuildNotifierPlugin({
       title: "编译结果：",
