@@ -3,16 +3,17 @@ require('@/css/btn.less');
 // require("style-loader!css-loader!postcss-loader!less-loader!../node_modules/font-awesome/css/font-awesome.css");
 import 'style-loader!css-loader!postcss-loader!less-loader!node_modules/font-awesome/css/font-awesome.css';
 import modelShow from '@/js/modelShow';
-
 import Button from '@/js/createAndAddBtn';
+import ModelAnimation from '@/js/ModelAnimation';
 
 window.onload = function() {
   modelShow(function(viewer) {
     console.log(viewer)
     if(viewer) {
       const button = new Button(viewer);
-      
+      const modelAnimation = new ModelAnimation(viewer);
       button.init();
+      modelAnimation.init();
     } else {
       throw new Error("模型初始化失败...")
     }
@@ -74,3 +75,6 @@ window.onload = function() {
 
 // let t = new Test()
 // t.takePhoto()
+if (module.hot) {
+  module.hot.accept();
+}

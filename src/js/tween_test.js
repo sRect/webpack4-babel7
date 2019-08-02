@@ -1,30 +1,108 @@
-const TWEEN = require('@tweenjs/tween.js');
+import TWEEN from '@tweenjs/tween.js';
 
-var box = document.createElement('div');
-box.style.setProperty('background-color', '#008800');
-box.style.setProperty('width', '100px');
-box.style.setProperty('height', '100px');
-document.body.appendChild(box);
+class MyTween {
+  constructor(viewer, stateRecordArr) {
+    this.targetTweenEasing = {
+      id: TWEEN.Easing.Linear.None,
+      name: 'Linear'
+    };
+    this.posTweenEasing = {
+      id: TWEEN.Easing.Linear.None,
+      name: 'Linear'
+    };
+    this.upTweenEasing = {
+      id: TWEEN.Easing.Linear.None,
+      name: 'Linear'
+    };
 
-// 设置循环动画
-function animate(time) {
-  requestAnimationFrame(animate);
-  TWEEN.update(time);
+    this.targetTweenDuration= 2500;
+    this.posTweenDuration = 2500;
+    this.upTweenDuration = 2500;
+    this.viewer = viewer;
+    this.animate = true;
+    this.stateRecordArr = stateRecordArr || [];
+  }
+
+  tweenCameraTo = (state, immediate) => {
+    if(state) {
+      let targetEnd = new THREE.Vector3(
+        state.viewport.target[0],
+        state.viewport.target[1],
+        state.viewport.target[2]);
+      let posEnd = new THREE.Vector3(
+        state.viewport.eye[0],
+        state.viewport.eye[1],
+        state.viewport.eye[2]);
+      let upEnd = new THREE.Vector3(
+        state.viewport.up[0],
+        state.viewport.up[1],
+        state.viewport.up[2]);
+
+      let nav = this.viewer.navigation;
+      let target = new THREE.Vector3().copy(nav.getTarget());
+      let pos = new THREE.Vector3().copy( nav.getPosition());
+      let up = new THREE.Vector3().copy(nav.getCameraUpVector());
+
+      let targetTween = this.createTween({
+        easing: this.targetTweenEasing.id,
+        onUpdate: (v) => {
+          nav.setTarget(v)
+        },
+        duration: immediate ? 0 : this.targetTweenDuration,
+        object: target,
+        to: targetEnd
+      });
+      let posTween = this.createTween({
+        easing: this.posTweenEasing.id,
+        onUpdate: (v) => {
+          nav.setPosition(v)
+        },
+        duration: immediate ? 0 : this.posTweenDuration,
+        object: pos,
+        to: posEnd
+      });
+      let upTween = this.createTween({
+        easing: this.upTweenEasing.id,
+        onUpdate: (v) => {
+          nav.setCameraUpVector(v)
+        },
+        duration: immediate ? 0 : this.upTweenDuration,
+        object: up,
+        to: upEnd
+      });
+
+      Promise.all([targetTween, posTween, upTween]).then(() => this.animate = false);
+
+      this.runAnimation(true);
+    }
+  }
+
+  runAnimation = (start) => {
+    if (start || this.animate) {
+      if (!this.animate) {
+        window.cancelAnimationFrame(this.runAnimation);
+        return;
+      }
+      window.requestAnimationFrame(this.runAnimation);
+      console.log("TWEEN.update")
+      TWEEN.update();
+    }
+  }
+
+  createTween = (params) => {
+    return new Promise((resolve) => {
+      new TWEEN.Tween(params.object)
+        .to(params.to, params.duration)
+        .onComplete(() => resolve())
+        .onUpdate(params.onUpdate)
+        .easing(params.easing)
+        .start()
+    })
+  }
+
+  loopSmooth() {
+    this && this.stateRecordArr.length && this.stateRecordArr.reverse().forEach(state => this.tweenCameraTo(state));
+  }
 }
-requestAnimationFrame(animate);
 
-var coords = {
-  x: 0,
-  y: 0
-}; // 起始点 (0, 0)
-var tween = new TWEEN.Tween(coords) // 创建一个新的tween用来改变 'coords'
-  .to({
-    x: 300,
-    y: 200
-  }, 1000) // 在1s内移动至 (300, 200)
-  .easing(TWEEN.Easing.Quadratic.Out) // 使用缓动功能使的动画更加平滑
-  .onUpdate(function () { // 在 tween.js 更新 'coords' 后调用
-    // 将 'box' 移动到 'coords' 所描述的位置，配合 CSS 过渡
-    box.style.setProperty('transform', 'translate(' + coords.x + 'px, ' + coords.y + 'px)');
-  })
-  .start(); // 立即开始 tween
+export default MyTween;

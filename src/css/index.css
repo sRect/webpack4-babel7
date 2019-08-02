@@ -1,1 +1,20 @@
 @import '../../node_modules/reset-css/reset.css';
+.stateRecordWrap {
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 4px;
+  position: fixed;
+  left: 10px;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(-50%);
+  box-shadow: 8px 8px 12px #888888;
+}
+
+.stateRecordWrap .recordWrapBtn {
+  cursor: pointer;
+}
+
+.stateRecordWrap .recordWrapBtn:not(:last-child) {
+  margin-bottom: 6px;
+}
