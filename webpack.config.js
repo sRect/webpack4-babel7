@@ -5,9 +5,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin'); // 打包html
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin'); // 分离css
 const PurifycssPlugin = require('purifycss-webpack'); // 消除无用的css
-const UglifyjsWebpackPlugin = require('uglifyjs-webpack-plugin'); // 混淆压缩js
+// const UglifyjsWebpackPlugin = require('uglifyjs-webpack-plugin'); // 混淆压缩js
 // const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
 const TerserPlugin = require('terser-webpack-plugin'); // 混淆压缩js
+const OptmizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin'); // 压缩css
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const WebpackBuildNotifierPlugin = require('webpack-build-notifier');
 const copyWebpackPlugin = require("copy-webpack-plugin");
@@ -82,8 +83,9 @@ module.exports = {
         use: [{
           loader: 'url-loader',
           options: {
-            limit: 100000,
-            name: '[name].[ext]'
+            limit: 8192,
+            outputPath: 'images/',
+            name: '[name]_[hash:7].[ext]'
           }
         }]
       },
@@ -98,13 +100,13 @@ module.exports = {
         commons: { // 抽离自己写的公共代码
           chunks: "initial",
           name: "common", // 打包后的文件名，任意命名
-          minChunks: 2, //最小引用2次
+          minChunks: 1, //最小引用2次
           minSize: 0 // 只要超出0字节就生成一个新包
         },
         vendor: { // 抽离第三方插件
           test: /node_modules/, // 指定是node_modules下的第三方包
           chunks: 'initial',
-          minChunks: 2,
+          minChunks: 1,
           maxInitialRequests: 5,
           minSize: 2,
           name: 'vendor', // 打包后的文件名，任意命名
@@ -154,6 +156,16 @@ module.exports = {
       //     keep_fnames: false,
       //   },
       // }),
+      new OptmizeCssAssetsWebpackPlugin({
+        assetNameRegExp: /\.css$/g,
+        cssProcessor: require('cssnano'),
+        cssProcessorOptions: {
+          safe: true,
+          discardComments: {
+            removeAll: true
+          }
+        }
+      })
     ]
   },
   plugins: [
