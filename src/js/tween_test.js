@@ -100,8 +100,8 @@ class MyTween {
     })
   }
 
-  loopSmooth() {
-    this && this.stateRecordArr.length && this.stateRecordArr.reverse().forEach(state => this.tweenCameraTo(state));
+  palyStateRecord() {
+    this && this.stateRecordArr.length && this.stateRecordArr.reverse().forEach(state => this.tweenCameraTo(state, false));
   }
 }
 

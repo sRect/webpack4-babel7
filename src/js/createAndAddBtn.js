@@ -16,6 +16,7 @@ class Button {
       let state = this.markup3DBtn.getState();
       if (state === 0) {
         this.markup3DBtn.setState(1);
+        MyMarkup.exitMarkup();
       } else if (state === 1) {
         this.markup3DBtn.setState(0);
 
@@ -28,7 +29,7 @@ class Button {
   createRecordStateBtn = () => {
     this.recordStateBtn = new Autodesk.Viewing.UI.Button("recordStateBtn");
     this.recordStateBtn.setIcon("fa-tachometer");
-    this.recordStateBtn.setToolTip('记录视点');
+    this.recordStateBtn.setToolTip('视点平滑');
     this.recordStateBtn.onClick = (e) => {
       let state = this.recordStateBtn.getState();
       if (state === 0) {

@@ -14,11 +14,24 @@ class MyMarkup {
     this.startPoint = {};
   }
 
-  initMarkupWrap() {
-    let myMarkupWrap = document.createElement('div');
-    myMarkupWrap.id = "myMarkupWrap";
+  static exitMarkup = () => {
+    let myMarkupWrap = document.querySelector("#myMarkupWrap");
+    if (myMarkupWrap) {
+      let markUpList = myMarkupWrap.querySelectorAll(".myMarkup");
+      Array.from(markUpList).forEach(el => {
+        el.parentNode.removeChild(el);
+      })
+    }
+  }
 
-    this.viewer.container.appendChild(myMarkupWrap);
+  initMarkupWrap() {
+    let myMarkupWrap = document.querySelector("#myMarkupWrap");
+    if (!myMarkupWrap) {
+      let myMarkupWrap = document.createElement('div');
+      myMarkupWrap.id = "myMarkupWrap";
+
+      this.viewer.container.appendChild(myMarkupWrap);
+    }
   }
 
   // 监听click

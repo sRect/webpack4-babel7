@@ -25,13 +25,13 @@ class ModelAnimation {
     this.stateRecordArr.length = 0;
   }
 
-  static playRecordState() {
+  static playRecordState() { // 播放记录
     // const _this = this;
     if (!this.stateRecordArr) return; 
     // let tween = new TWEEN.Tween({ ...endState});
     console.log(this.stateRecordArr);
     let myTween = new MyTween(this.viewer, this.stateRecordArr);
-    myTween.loopSmooth()
+    myTween.palyStateRecord()
     // this.stateRecordArr.reduceRight((a, b) => {
     //   let aViewport = a && a.viewport;
     //   let bViewport = b && b.viewport;
