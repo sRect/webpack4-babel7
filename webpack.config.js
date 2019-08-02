@@ -19,7 +19,7 @@ module.exports = {
   entry: ['./src/index.js'], // 将两个文件打包成一个
   // entry: { // 多入口
   //   index: './src/index.js',
-  //   a: './src/a.js'
+  //   jquery: 'jquery',
   // },
   output: {
     path: path.resolve(__dirname, 'dist'),

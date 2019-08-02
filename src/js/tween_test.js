@@ -15,7 +15,7 @@ class MyTween {
       name: 'Linear'
     };
 
-    this.targetTweenDuration= 2500;
+    this.targetTweenDuration = 2500;
     this.posTweenDuration = 2500;
     this.upTweenDuration = 2500;
     this.viewer = viewer;
@@ -23,25 +23,16 @@ class MyTween {
     this.stateRecordArr = stateRecordArr || [];
   }
 
-  tweenCameraTo = (state, immediate) => {
-    if(state) {
-      let targetEnd = new THREE.Vector3(
-        state.viewport.target[0],
-        state.viewport.target[1],
-        state.viewport.target[2]);
-      let posEnd = new THREE.Vector3(
-        state.viewport.eye[0],
-        state.viewport.eye[1],
-        state.viewport.eye[2]);
-      let upEnd = new THREE.Vector3(
-        state.viewport.up[0],
-        state.viewport.up[1],
-        state.viewport.up[2]);
+  tweenCameraTo = ({ viewport: { target, eye, up } } = state, immediate) => {
+    if (target && eye && up) {
+      let targetEnd = new THREE.Vector3(target[0], target[1], target[2]);
+      let posEnd = new THREE.Vector3(eye[0], eye[1], eye[2]);
+      let upEnd = new THREE.Vector3(up[0], up[1], up[2]);
 
       let nav = this.viewer.navigation;
-      let target = new THREE.Vector3().copy(nav.getTarget());
-      let pos = new THREE.Vector3().copy( nav.getPosition());
-      let up = new THREE.Vector3().copy(nav.getCameraUpVector());
+      let copyTarget = new THREE.Vector3().copy(nav.getTarget());
+      let copyPos = new THREE.Vector3().copy(nav.getPosition());
+      let copyUp = new THREE.Vector3().copy(nav.getCameraUpVector());
 
       let targetTween = this.createTween({
         easing: this.targetTweenEasing.id,
@@ -49,7 +40,7 @@ class MyTween {
           nav.setTarget(v)
         },
         duration: immediate ? 0 : this.targetTweenDuration,
-        object: target,
+        object: copyTarget,
         to: targetEnd
       });
       let posTween = this.createTween({
@@ -58,7 +49,7 @@ class MyTween {
           nav.setPosition(v)
         },
         duration: immediate ? 0 : this.posTweenDuration,
-        object: pos,
+        object: copyPos,
         to: posEnd
       });
       let upTween = this.createTween({
@@ -67,7 +58,7 @@ class MyTween {
           nav.setCameraUpVector(v)
         },
         duration: immediate ? 0 : this.upTweenDuration,
-        object: up,
+        object: copyUp,
         to: upEnd
       });
 
