@@ -59,3 +59,7 @@ body {
 .stateRecordWrap .recordWrapBtn:not(:last-child) {
   margin-bottom: 6px;
 }
+
+.crosshair {
+  cursor: crosshair !important;
+}

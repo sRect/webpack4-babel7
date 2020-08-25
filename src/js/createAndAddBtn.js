@@ -6,6 +6,7 @@ class Button {
     this.myBtnGroup = new Autodesk.Viewing.UI.ControlGroup("bimbdip_add2DPointGroup");;
     this.markup3DBtn = null;
     this.recordStateBtn = null;
+    this.selectWindowBtn = null;
   }
 
   createMarkupBtn = () => {
@@ -55,9 +56,32 @@ class Button {
     }
   }
 
+  createSelectWindowBtn = () => {
+    this.selectWindowBtn = new Autodesk.Viewing.UI.Button("selectWindowBtn");
+    this.selectWindowBtn.setIcon("fa-object-group");
+    this.selectWindowBtn.setToolTip('框选');
+    this.selectWindowBtn.onClick = () => {
+      let state = this.selectWindowBtn.getState();
+      if (state === 0) {
+        this.selectWindowBtn.setState(1);
+        this.viewer.canvas.classList.remove("crosshair");
+        this.viewer.loadExtension('MySelectionWindow').then(function (ext) {
+          ext.exitSelectWindow();
+        });
+      } else if (state === 1) {
+        this.selectWindowBtn.setState(0);
+        this.viewer.canvas.classList.add("crosshair");
+        this.viewer.loadExtension('MySelectionWindow').then(function (ext) {
+          ext.init();  
+        });
+      }
+    }
+  }
+
   addControl = () => {
     this.myBtnGroup.addControl(this.markup3DBtn);
     this.myBtnGroup.addControl(this.recordStateBtn);
+    this.myBtnGroup.addControl(this.selectWindowBtn);
 
     this.viewer.toolbar.addControl(this.myBtnGroup);
   }
@@ -65,8 +89,12 @@ class Button {
   init() {
     this.createMarkupBtn();
     this.createRecordStateBtn();
+    this.createSelectWindowBtn();
     this.addControl();
   }
 }
 
 export default Button;
+
+// toolbar-panTool
+// toolbar-zoomTool
